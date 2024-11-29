@@ -1,6 +1,6 @@
-export function createBitArray(maxBytes: number = 256) {
+export function createBitArray() {
   return {
-    bytes: new Array(maxBytes).fill(0),
+    bytes: [0],
     bits: 0,
     readHead: 0,
 
@@ -8,7 +8,7 @@ export function createBitArray(maxBytes: number = 256) {
       const index = Math.floor(this.readHead / 8);
       const bitIndex = 7 - this.readHead % 8;
       this.readHead++;
-      return (this.bytes[index] >> bitIndex) & 1;
+      return ((this.bytes[index] ?? 0) >> bitIndex) & 1;
     },
 
     readBits(bits: number) {
@@ -22,6 +22,9 @@ export function createBitArray(maxBytes: number = 256) {
     writeBit(bit: number) {
       const index = Math.floor(this.bits / 8);
       const bitIndex = 7 - this.bits % 8;
+      if (index >= this.bytes.length) {
+        this.bytes.push(0);
+      }
       this.bytes[index] |= (bit > 0 ? 1 : 0) << bitIndex;
       this.bits++;
     },

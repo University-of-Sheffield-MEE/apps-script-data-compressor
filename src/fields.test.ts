@@ -24,6 +24,11 @@ describe('boolean', () => {
     expect(field.decompress(data)).toBe(true);
     expect(field.decompress(data)).toBe(false);
   });
+
+  it('reports its size',  () => {
+    const field = boolean();
+    expect(field.getSizeBits()).toBe(1);
+  })
 });
 
 describe('number', () => {
@@ -52,6 +57,11 @@ describe('number', () => {
     expect(() => field.compress(data, 16)).toThrow();
     expect(() => field.compress(data, -1)).toThrow();
   });
+
+  it('reports its size',  () => {
+    const field = number(0, 15);
+    expect(field.getSizeBits()).toBe(4);
+  })
 });
 
 describe('choose', () => {
@@ -79,6 +89,11 @@ describe('choose', () => {
     const data = createBitArray();
     expect(() => field.compress(data, 'd')).toThrow();
   });
+
+  it('reports its size',  () => {
+    const field = choose(['a', 'b', 'c']);
+    expect(field.getSizeBits()).toBe(2);
+  })
 });
 
 describe('string', () => {
@@ -119,6 +134,11 @@ describe('string', () => {
     dataOut.fromBase64(base64);
     const result = field.decompress(dataOut);
     expect(result).toBe('of');
+  });
+
+  it('reports its size', () => {
+    const field = string(2, 'a-o')
+    expect(field.getSizeBits()).toBe(8);
   });
 
 });

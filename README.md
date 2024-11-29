@@ -19,8 +19,8 @@ let compressor = DataCompressor.createCompressor(
     activityNumber: DataCompressor.number(0, 999),
     // A true/false value
     isRemote: DataCompressor.boolean()
-    // 7 characters of text containing only uppercase letters and numbers
-    moduleCode: DataCompressor.string(7, 'A-Z0-9'),
+    // 6 characters of text containing only uppercase letters and numbers
+    moduleCode: DataCompressor.string(6, 'A-Z0-9'),
   })
 )
 
@@ -29,11 +29,12 @@ let data = {
   theme: 'MBCE',
   activityNumber: 101,
   isRemote: false,
-  moduleCode: 'CIV2000',
+  moduleCode: 'CIV201',
 }
 
 // Compress to a fixed-length compact string
 let compressedString = compressor.compress(data);
+// Returns "qYGJfIAQA"
 
 // And decompress it back to its original form later
 let data2 = compressor.decompress(compressedString);

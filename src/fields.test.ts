@@ -11,14 +11,14 @@ describe('boolean', () => {
     field.compress(data, 1);
     // @ts-ignore
     field.compress(data, null);
-    // btoa(String.fromCharCode(0b0101))
-    expect(data.toBase64()).toBe('BQ');
+    // btoa(String.fromCharCode(0b10100000))
+    expect(data.toBase64()).toBe('oA==');
   });
 
   it('decompresses', () => {
     const field = boolean();
     const data = createBitArray();
-    data.fromBase64('BQ');
+    data.fromBase64('oA==');
     expect(field.decompress(data)).toBe(true);
     expect(field.decompress(data)).toBe(false);
     expect(field.decompress(data)).toBe(true);
@@ -38,14 +38,14 @@ describe('number', () => {
     field.compress(data, 5);
     field.compress(data, 15);
     field.compress(data, 0);
-    // btoa(String.fromCharCode(0b11110101, 0b0000))
-    expect(data.toBase64()).toBe('9QA');
+    // btoa(String.fromCharCode(0b10101111, 0b0000))
+    expect(data.toBase64()).toBe('rwA=');
   });
 
   it('decompresses', () => {
     const field = number(0, 15);
     const data = createBitArray();
-    data.fromBase64('9QA');
+    data.fromBase64('rwA=');
     expect(field.decompress(data)).toBe(5);
     expect(field.decompress(data)).toBe(15);
     expect(field.decompress(data)).toBe(0);
@@ -72,7 +72,7 @@ describe('choose', () => {
     field.compress(data, 'c');
     field.compress(data, 'b');
     // btoa(String.fromCharCode(0b011000))
-    expect(data.toBase64()).toBe('GA');
+    expect(data.toBase64()).toBe('GA==');
   });
 
   it('decompresses', () => {
@@ -128,7 +128,7 @@ describe('string', () => {
     field.compress(dataIn, 'of');
     expect(dataIn.getBytes().length).toBe(1); 
     const base64 = dataIn.toBase64();
-    expect(base64.length).toBe(2);
+    expect(base64.replaceAll('=', '').length).toBe(2);
 
     const dataOut = createBitArray();
     dataOut.fromBase64(base64);

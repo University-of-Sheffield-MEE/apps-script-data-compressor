@@ -10,16 +10,19 @@ It could be used outside of Apps Script, but instances of `Utilities.base64Encod
 
 ```js
 // Define the format of your data
-let compressor = DataCompressor.createObjectCompressor({
-  // One of a pre-defined set of options
-  theme: DataCompressor.choose(['ACME', 'MBCE', 'CCEE', 'AMT']),
-  // A number within a set range
-  activityNumber: DataCompressor.number(0, 999),
-  // A true/false value
-  isRemote: DataCompressor.boolean()
-  // 7 characters of text containing only uppercase letters and numbers
-  moduleCode: DataCompressor.string(7, 'A-Z0-9'),
-})
+let compressor = DataCompressor.createCompressor(
+  // We want to compress a complex (object) value with the following fields:
+  DataCompressor.object({
+    // One of a pre-defined set of options
+    theme: DataCompressor.choose(['ACME', 'MBCE', 'CCEE', 'AMT']),
+    // A number within a set range
+    activityNumber: DataCompressor.number(0, 999),
+    // A true/false value
+    isRemote: DataCompressor.boolean()
+    // 7 characters of text containing only uppercase letters and numbers
+    moduleCode: DataCompressor.string(7, 'A-Z0-9'),
+  })
+)
 
 // Take a data object matching the above
 let data = {
@@ -29,7 +32,7 @@ let data = {
   moduleCode: 'CIV2000',
 }
 
-// Compress to a compact string
+// Compress to a fixed-length compact string
 let compressedString = compressor.compress(data);
 
 // And decompress it back to its original form later

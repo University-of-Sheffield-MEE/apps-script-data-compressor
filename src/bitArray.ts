@@ -6,7 +6,7 @@ export function createBitArray(maxBytes: number = 256) {
 
     readBit() {
       const index = Math.floor(this.readHead / 8);
-      const bitIndex = this.readHead % 8;
+      const bitIndex = 7 - this.readHead % 8;
       this.readHead++;
       return (this.bytes[index] >> bitIndex) & 1;
     },
@@ -19,17 +19,9 @@ export function createBitArray(maxBytes: number = 256) {
       return result;
     },
 
-    readBytes(length: number) {
-      const result = [];
-      for (let i = 0; i < length; i++) {
-        result.push(this.readBits(8));
-      }
-      return result;
-    },
-
     writeBit(bit: number) {
       const index = Math.floor(this.bits / 8);
-      const bitIndex = this.bits % 8;
+      const bitIndex = 7 - this.bits % 8;
       this.bytes[index] |= (bit > 0 ? 1 : 0) << bitIndex;
       this.bits++;
     },
@@ -41,18 +33,12 @@ export function createBitArray(maxBytes: number = 256) {
       }
     },
 
-    writeBytes(bytes: number[]) {
-      for (let byte of bytes) {
-        this.writeBits(byte, 8);
-      }
-    },
-
     getBytes() {
       return this.bytes.slice(0, Math.ceil(this.bits / 8));
     },
     
     toBase64() {
-      return Utilities.base64Encode(this.getBytes()).replace(/=+$/, '');
+      return Utilities.base64Encode(this.getBytes())
     },
 
     fromBase64(base64: string) {

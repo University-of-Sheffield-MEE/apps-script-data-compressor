@@ -2,10 +2,11 @@ import { createCompressor } from ".";
 import { boolean, choose, number, object, string } from "./fields";
 
 describe('compressor', () => {
-  it ('compresses and decompresses single fields', () => {
+  it ('compresses and decompresses single fields, removing trailing = and A', () => {
     const compressor = createCompressor(boolean());
-    expect(compressor.compress(true)).toBe('AQ');
-    expect(compressor.decompress('AQ')).toBe(true);
+    // Normally gA==
+    expect(compressor.compress(true)).toBe('g'); 
+    expect(compressor.decompress('g')).toBe(true);
   });
 
   it('compresses and decompresses objects', () => {

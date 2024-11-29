@@ -1,31 +1,25 @@
-import { BitArray, createBitArray } from "./bitArray";
-import { Field } from "./fields";
+import { createBitArray } from "./bitArray";
+import { Field, object } from "./fields";
 
-export function createObjectCompressor(objectShape: Record<string, Field<any>>) {
-  if (typeof objectShape !== 'object') {
-    throw new Error('createObjectCompressor should be passed an object. Got ' + typeof objectShape);
-  }
-  const keys = Object.keys(objectShape);
-
+export function createCompressor<T extends any>(field: Field<T>) {
   return {
-    compress(obj: Record<string, any>) {
+    compress(dataIn: T) {
       const data = createBitArray();
-      keys.forEach((key) => {
-        objectShape[key].compress(data, obj[key]);
-      });
+      field.compress(data, dataIn);
       return data.toBase64();
     },
-    decompress(base64: string) {
+    decompress(base64: string): T {
       const data = createBitArray();
       data.fromBase64(base64);
-      const obj: Record<string, any> = {};
-      keys.forEach((key) => {
-        obj[key] = objectShape[key].decompress(data);
-      });
-      return obj;
+      return field.decompress(data);
     },
-    getSize: () => keys.reduce((acc, key) => acc + objectShape[key].getSize(), 0),
+    getSizeBits: () => field.getSizeBits(),
+    getSize: () => Math.ceil(field.getSizeBits() / 6)
   }
+}
+
+export function createObjectCompressor<T extends any>(shape: { [key: string]: Field<any> }) {
+  return createCompressor(object(shape));
 }
 
 export * from './fields';

@@ -3,7 +3,7 @@ import { BitArray } from "./bitArray";
 export type Field<T extends any> = {
   compress: (data: BitArray, value: T) => void;
   decompress: (data: BitArray) => T;
-  getSize: () => number;
+  getSizeBits: () => number;
 }
 
 export function boolean(): Field<boolean> {
@@ -14,7 +14,7 @@ export function boolean(): Field<boolean> {
     decompress(data) {
       return data.readBit() === 1;
     },
-    getSize() {
+    getSizeBits() {
       return 1;
     }
   }
@@ -37,7 +37,7 @@ export function choose(values: any[]): Field<any> {
       }
       return values[index];
     },
-    getSize() {
+    getSizeBits() {
       return bitSize;
     }
   }
@@ -56,7 +56,7 @@ export function number(min: number, max: number): Field<number> {
     decompress(data) {
       return data.readBits(bitSize) + min;
     },
-    getSize() {
+    getSizeBits() {
       return bitSize;
     }
   }
@@ -82,8 +82,32 @@ export function string(length: number, characterPattern?: string): Field<string>
       }
       return s;
     },
-    getSize() {
-      return charField.getSize() * length;
+    getSizeBits() {
+      return charField.getSizeBits() * length;
+    }
+  }
+}
+
+export function object<T extends Record<string, any>>(shape: { [k in keyof T]: Field<T[k]> }): Field<T> {
+  if (typeof shape !== 'object') {
+    throw new Error('object should be passed an object shape. Got ' + typeof shape);
+  }
+  const keys = Object.keys(shape) as (keyof T)[];
+  return {
+    compress(data, value) {
+      keys.forEach((key) => {
+        shape[key].compress(data, value[key]);
+      });
+    },
+    decompress(data) {
+      const obj: Partial<T> = {};
+      keys.forEach((key) => {
+        obj[key] = shape[key].decompress(data);
+      });
+      return obj as T;
+    },
+    getSizeBits() {
+      return keys.reduce((acc, key) => acc + shape[key].getSizeBits(), 0);
     }
   }
 }

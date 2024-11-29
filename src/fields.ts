@@ -20,7 +20,7 @@ export function boolean(): Field<boolean> {
   }
 }
 
-export function choose(values: any[]): Field<any> {
+export function choose<T extends any>(values: T[]): Field<T> {
   const bitSize = Math.ceil(Math.log2(values.length));
   return {
     compress(data, value) {

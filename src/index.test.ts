@@ -63,7 +63,7 @@ describe('compressor', () => {
 
   it('reports its size', () => {
     const shape = {
-      option: choose(['apple', 'banana', 'cucumber']),
+      option: choose(['apple', 'banana', 'cucumber'] as const),
       value: number(0, 15),
       isOne: boolean(),
       isTwo: boolean(),
@@ -80,7 +80,7 @@ describe('compressor', () => {
       isTwo: false,
       value: 9,
       option: 'banana',
-    };
+    } as const;
     const compressed = compressor.compress(obj);
     expect(compressed.length).toBe(3);
   });

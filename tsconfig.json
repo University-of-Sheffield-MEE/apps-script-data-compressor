@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2022",
+    "strict": true,
+    "moduleResolution": "node",
+    "types": ["vitest/globals", "google-apps-script"],
+ },
+  "exclude": [
+    "**/dist",
+    "node_modules"
+  ]
+}

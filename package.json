@@ -1,0 +1,22 @@
+{
+  "name": "data-compressor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type":"module",
+  "scripts": {
+    "test": "vitest",
+    "build": "vite build --config src/vite.config.ts",
+    "push": "clasp push"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.85",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vite-plugin-static-copy": "^2.1.0",
+    "vitest": "^2.1.5"
+  }
+}
